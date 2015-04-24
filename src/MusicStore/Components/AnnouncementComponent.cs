@@ -36,9 +36,9 @@ namespace MusicStore.Components
             return View(latestAlbum);
         }
 
-        private Task<Album> GetLatestAlbum()
+        private async Task<Album> GetLatestAlbum()
         {
-            var latestAlbum = DbContext.Albums
+            var latestAlbum = await DbContext.Albums
                 .OrderByDescending(a => a.Created)
                 .Where(a => (a.Created - DateTime.UtcNow).TotalDays <= 2)
                 .FirstOrDefaultAsync();
