@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.Caching.Memory;
+using Microsoft.Framework.Caching.Memory.Infrastructure;
 using Microsoft.Framework.DependencyInjection;
 using MusicStore.Models;
 using Xunit;
@@ -30,22 +30,14 @@ namespace MusicStore.Components
         public async Task AnnouncementComponent_Returns_LatestAlbum()
         {
             // Arrange
-            var viewContext = new ViewContext()
-            {
-                ViewData = new ViewDataDictionary(
-                    new EmptyModelMetadataProvider(),
-                    new ModelStateDictionary())
-            };
+            var today = DateTime.Parse("10/30/2012");
 
             var announcementComponent = new AnnouncementComponent()
             {
                 DbContext = _serviceProvider.GetRequiredService<MusicStoreContext>(),
                 Cache = _serviceProvider.GetRequiredService<IMemoryCache>(),
-                ViewContext = viewContext,
-                ViewData = new ViewDataDictionary(viewContext.ViewData),
+                Clock = new TestSystemClock(today),
             };
-
-            var today = DateTime.UtcNow.Date;
 
             PopulateData(announcementComponent.DbContext, latestAlbumDate: today);
 
@@ -60,7 +52,7 @@ namespace MusicStore.Components
             Assert.Equal(today, albumResult.Created.Date);
         }
 
-        private void PopulateData(DbContext context, DateTime latestAlbumDate)
+        private static void PopulateData(DbContext context, DateTime latestAlbumDate)
         {
             var albums = TestAlbumDataProvider.GetAlbums(latestAlbumDate);
 
@@ -101,6 +93,24 @@ namespace MusicStore.Components
                     }).ToArray();
 
                 return albums;
+            }
+        }
+
+        private class TestSystemClock : ISystemClock
+        {
+            private DateTime _date;
+
+            public TestSystemClock(DateTime date)
+            {
+                _date = date;
+            }
+
+            public DateTimeOffset UtcNow
+            {
+                get
+                {
+                    return new DateTimeOffset(_date);
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.Caching.Memory;
+using Microsoft.Framework.Caching.Memory.Infrastructure;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
@@ -103,6 +104,9 @@ namespace MusicStore
             // Add session related services.
             services.AddCaching();
             services.AddSession();
+
+            // Add the system clock service
+            services.AddSingleton<ISystemClock, SystemClock>();
 
             // Configure Auth
             services.Configure<AuthorizationOptions>(options =>

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Session;
 using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Caching.Memory;
@@ -35,9 +34,6 @@ namespace MusicStore.Components
             // Arrange
             var viewContext = new ViewContext()
             {
-                ViewData = new ViewDataDictionary(
-                    new EmptyModelMetadataProvider(),
-                    new ModelStateDictionary()),
                 HttpContext = new DefaultHttpContext()
             };
 
@@ -52,14 +48,13 @@ namespace MusicStore.Components
 
             // DbContext initialization
             var dbContext = _serviceProvider.GetRequiredService<MusicStoreContext>();
-            PopulateData(dbContext, cartId, albumTitle: "AblumA", itemCount: 10);
+            PopulateData(dbContext, cartId, albumTitle: "AlbumA", itemCount: 10);
 
             // CartSummaryComponent initialization
             var cartSummaryComponent = new CartSummaryComponent()
             {
                 DbContext = dbContext,
                 ViewContext = viewContext,
-                ViewData = new ViewDataDictionary(viewContext.ViewData)
             };
 
             // Act
@@ -71,7 +66,7 @@ namespace MusicStore.Components
             Assert.Null(viewResult.ViewName);
             Assert.Null(viewResult.ViewData.Model);
             Assert.Equal(10, cartSummaryComponent.ViewBag.CartCount);
-            Assert.Equal("AblumA", cartSummaryComponent.ViewBag.CartSummary);
+            Assert.Equal("AlbumA", cartSummaryComponent.ViewBag.CartSummary);
         }
 
         private static ISession CreateTestSession()

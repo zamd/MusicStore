@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.Framework.DependencyInjection;
 using MusicStore.Models;
 using Xunit;
@@ -28,18 +27,9 @@ namespace MusicStore.Components
         public async Task GenreMenuComponent_Returns_NineGenres()
         {
             // Arrange
-            var viewContext = new ViewContext()
-            {
-                ViewData = new ViewDataDictionary(
-                    new EmptyModelMetadataProvider(),
-                    new ModelStateDictionary())
-            };
-
             var genreMenuComponent = new GenreMenuComponent()
             {
                 DbContext = _serviceProvider.GetRequiredService<MusicStoreContext>(),
-                ViewContext = viewContext,
-                ViewData = new ViewDataDictionary(viewContext.ViewData),
             };
 
             PopulateData(genreMenuComponent.DbContext);
@@ -55,7 +45,7 @@ namespace MusicStore.Components
             Assert.Equal(9, genreResult.Count);
         }
 
-        private void PopulateData(MusicStoreContext context)
+        private static void PopulateData(MusicStoreContext context)
         {
             var genres = Enumerable.Range(1, 10).Select(n => new Genre());
 
