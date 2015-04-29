@@ -6,11 +6,11 @@ using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.Caching.Memory;
-using Microsoft.Framework.Caching.Memory.Infrastructure;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
+using MusicStore.Components;
 using MusicStore.Models;
 
 namespace MusicStore

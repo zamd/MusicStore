@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.Caching.Memory;
-using Microsoft.Framework.Caching.Memory.Infrastructure;
 using Microsoft.Framework.DependencyInjection;
 using MusicStore.Models;
 using Xunit;
@@ -30,13 +29,13 @@ namespace MusicStore.Components
         public async Task AnnouncementComponent_Returns_LatestAlbum()
         {
             // Arrange
-            var today = DateTime.Parse("10/30/2012");
+            var today = new DateTime(year: 2002, month: 10, day: 30);
 
             var announcementComponent = new AnnouncementComponent()
             {
                 DbContext = _serviceProvider.GetRequiredService<MusicStoreContext>(),
                 Cache = _serviceProvider.GetRequiredService<IMemoryCache>(),
-                Clock = new TestSystemClock(today),
+                Clock = new TestSystemClock() { UtcNow = today },
             };
 
             PopulateData(announcementComponent.DbContext, latestAlbumDate: today);
@@ -98,20 +97,7 @@ namespace MusicStore.Components
 
         private class TestSystemClock : ISystemClock
         {
-            private DateTime _date;
-
-            public TestSystemClock(DateTime date)
-            {
-                _date = date;
-            }
-
-            public DateTimeOffset UtcNow
-            {
-                get
-                {
-                    return new DateTimeOffset(_date);
-                }
-            }
+            public DateTime UtcNow { get; set; }
         }
     }
 }
