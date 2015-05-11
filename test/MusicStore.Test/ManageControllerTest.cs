@@ -10,6 +10,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.Logging.Console;
 using MusicStore.Models;
 using Xunit;
 
@@ -29,14 +31,16 @@ namespace MusicStore.Controllers
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<MusicStoreContext>();
 
+            services.AddLogging();
+
             // IHttpContextAccessor is required for SignInManager, and UserManager
             var context = new DefaultHttpContext();
             context.SetFeature<IHttpAuthenticationFeature>(new HttpAuthenticationFeature() { Handler = new TestAuthHandler() });
             services.AddInstance<IHttpContextAccessor>(
                 new HttpContextAccessor()
-                    {
-                        HttpContext = context,
-                    });
+                {
+                    HttpContext = context,
+                });
 
             _serviceProvider = services.BuildServiceProvider();
         }
