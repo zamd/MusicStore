@@ -18,6 +18,21 @@ namespace E2ETests
         [InlineData(ServerType.IISExpress, RuntimeFlavor.CoreClr, RuntimeArchitecture.x86, "http://localhost:5050/")]
         [InlineData(ServerType.IISExpress, RuntimeFlavor.Clr, RuntimeArchitecture.x64, "http://localhost:5051/")]
         [InlineData(ServerType.WebListener, RuntimeFlavor.CoreClr, RuntimeArchitecture.x64, "http://localhost:5052/")]
+        [InlineData(ServerType.WebListener, RuntimeFlavor.Clr, RuntimeArchitecture.x86, "http://localhost:5053/")]
+        public async Task NtlmAuthenticationTest_OnWindows(ServerType serverType, RuntimeFlavor runtimeFlavor, RuntimeArchitecture architecture, string applicationBaseUrl)
+        {
+            await NtlmAuthenticationTest(serverType, runtimeFlavor, architecture, applicationBaseUrl);
+        }
+
+        [ConditionalTheory, Trait("E2Etests", "E2Etests")]
+        [FrameworkSkipCondition(RuntimeFrameworks.CLR)]
+        [InlineData(ServerType.Kestrel, RuntimeFlavor.CoreClr, RuntimeArchitecture.x64, "http://localhost:5054/")]
+        [InlineData(ServerType.Kestrel, RuntimeFlavor.Mono, RuntimeArchitecture.x86, "http://localhost:5055/")]
+        public async Task NtlmAuthenticationTest_OnUnix(ServerType serverType, RuntimeFlavor runtimeFlavor, RuntimeArchitecture architecture, string applicationBaseUrl)
+        {
+            await NtlmAuthenticationTest(serverType, runtimeFlavor, architecture, applicationBaseUrl);
+        }
+
         public async Task NtlmAuthenticationTest(ServerType serverType, RuntimeFlavor runtimeFlavor, RuntimeArchitecture architecture, string applicationBaseUrl)
         {
             var logger = new LoggerFactory()
