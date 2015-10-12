@@ -13,7 +13,7 @@ namespace E2ETests
     // Uses ports ranging 5050 - 5060.
     public class NtlmAuthenticationTests
     {
-        [ConditionalTheory, Trait("E2Etests", "E2Etests")]
+        [ConditionalTheory, Trait("E2Etests", "NtlmAuthenticationTests")]
         [OSSkipCondition(OperatingSystems.Linux)]
         [OSSkipCondition(OperatingSystems.MacOSX)]
         [InlineData(ServerType.WebListener, RuntimeFlavor.CoreClr, RuntimeArchitecture.x64, "http://localhost:5050/")]
