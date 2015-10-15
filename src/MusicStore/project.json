@@ -5,9 +5,6 @@
     "description": "Music store application on ASP.NET 5",
     "version": "1.0.0-*",
     "compilationOptions": { "warningsAsErrors": true, "define": [ "DEMO", "TESTING" ] },
-    "compile": [
-        "../../test/E2ETests/compiler/shared/**/*.cs"
-    ],
     "publishExclude": "*.cmd",
     "webroot": "wwwroot",
     "dependencies": {
