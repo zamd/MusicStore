@@ -20,7 +20,7 @@ namespace MusicStore
 {
     public class StartupOpenIdConnectTesting
     {
-        private readonly IRuntimeEnvironment _runtimeEnvironment;
+        private readonly Platform _platform;
 
         public StartupOpenIdConnectTesting(IApplicationEnvironment env, IRuntimeEnvironment runtimeEnvironment)
         {
@@ -32,7 +32,7 @@ namespace MusicStore
                 .AddEnvironmentVariables(); //All environment variables in the process's context flow in as configuration values.
 
             Configuration = builder.Build();
-            _runtimeEnvironment = runtimeEnvironment;
+            _platform = new Platform(runtimeEnvironment);
         }
 
         public IConfiguration Configuration { get; private set; }
@@ -42,7 +42,9 @@ namespace MusicStore
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             //Sql client not available on mono
-            var useInMemoryStore = _runtimeEnvironment.RuntimeType.Equals("Mono", StringComparison.OrdinalIgnoreCase);
+            var useInMemoryStore = !_platform.IsRunningOnWindows
+                || _platform.IsRunningOnMono
+                || _platform.IsRunningOnNanoServer;
 
             // Add EF services to the services container
             if (useInMemoryStore)
