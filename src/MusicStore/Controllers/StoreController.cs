@@ -8,6 +8,19 @@ using MusicStore.Models;
 
 namespace MusicStore.Controllers
 {
+    public class StockLevel
+    {
+        public StockLevel(string productIdentifier, int stockLevel)
+        {
+            ProductIdentifier = productIdentifier;
+            Level = stockLevel;
+        }
+
+
+        public int Level { get; set; }
+        public string ProductIdentifier { get; set; }
+
+    }
     public class StoreController : Controller
     {
         [FromServices]
@@ -23,6 +36,10 @@ namespace MusicStore.Controllers
             var genres = await DbContext.Genres.ToListAsync();
 
             return View(genres);
+        }
+        public async Task<StockLevel> Stock(string productIdentifier)
+        {
+            return new StockLevel(productIdentifier, 10);
         }
 
         //
